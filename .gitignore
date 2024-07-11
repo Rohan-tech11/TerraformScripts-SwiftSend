@@ -1,0 +1,15 @@
+# Ignore Terraform state files
+*.tfstate.backup
+
+# Ignore .terraform directory and lock files
+**/.terraform/*
+*.tfstate.lock.info
+*.terraform.lock.hcl
+
+# Ignore Terraform plugin binaries
+*.terraform/plugins/*
+
+
+
+# Ignore local .env files (if used for development)
+
