@@ -28,6 +28,7 @@ resource "aws_security_group_rule" "ansible_ssh" {
 resource "aws_iam_role" "ansible_role" {
   name = "${var.environment}-ansible-role"
 
+//trusted entity ec2
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
