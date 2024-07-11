@@ -31,6 +31,7 @@ variable "availability_zones" {
   default     = ["ca-central-1a", "ca-central-1b"]
 }
 
+//ansible variables
 variable "key_name" {
   description = "EC2 Key Pair name"
 }
@@ -38,4 +39,46 @@ variable "key_name" {
 variable "ansible_instance_type" {
   description = "EC2 instance type for Ansible server"
   default     = "t3.small"
+}
+
+//eks variables
+variable "eks_cluster_name" {
+  description = "Name of the EKS cluster"
+  type        = string
+}
+
+variable "eks_node_group_name" {
+  description = "Name of the EKS node group"
+  type        = string
+}
+
+variable "eks_instance_types" {
+  description = "List of instance types for EKS nodes"
+  type        = list(string)
+}
+
+variable "eks_desired_size" {
+  description = "Desired size of EKS node group"
+  type        = number
+}
+
+variable "eks_min_size" {
+  description = "Minimum size of EKS node group"
+  type        = number
+}
+
+variable "eks_max_size" {
+  description = "Maximum size of EKS node group"
+  type        = number
+}
+
+# EFS Variables
+variable "efs_creation_token" {
+  description = "Creation token for the EFS file system"
+  type        = string
+}
+
+variable "efs_encrypted" {
+  description = "Whether the EFS file system should be encrypted"
+  type        = bool
 }
