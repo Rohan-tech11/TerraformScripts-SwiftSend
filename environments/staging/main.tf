@@ -31,3 +31,27 @@ module "ansible" {
   key_name                  = var.key_name
   instance_type             = var.ansible_instance_type
 }
+
+
+module "eks" {
+  source = "../../modules/eks"
+
+  environment      = var.environment
+  vpc_id           = module.networking.vpc_id
+  private_subnet_ids = module.networking.private_subnet_ids
+  cluster_name     = "${var.environment}-jenkins-cluster"
+  node_group_name  = "${var.environment}-jenkins-nodes"
+  instance_types   = var.eks_instance_types
+  desired_size     = var.eks_desired_size
+  min_size         = var.eks_min_size
+  max_size         = var.eks_max_size
+}
+
+module "efs" {
+  source = "../../modules/efs"
+
+  environment    = var.environment
+  vpc_id         = module.networking.vpc_id
+  subnet_ids     = module.networking.private_subnet_ids
+  eks_sg_id      = module.eks.node_security_group_id
+}
