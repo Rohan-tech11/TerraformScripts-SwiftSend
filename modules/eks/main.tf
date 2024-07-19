@@ -5,6 +5,9 @@ resource "aws_eks_cluster" "this" {
   vpc_config {
     subnet_ids = var.private_subnet_ids
   }
+    access_config {
+    authentication_mode = var.authentication_mode
+  }
 
   depends_on = [aws_iam_role_policy_attachment.eks_cluster_policy]
 }
@@ -86,4 +89,21 @@ resource "aws_iam_role_policy_attachment" "eks_cni_policy" {
 resource "aws_iam_role_policy_attachment" "ec2_container_registry_read_only" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
   role       = aws_iam_role.eks_nodes.name
+}
+
+//creating access entry for ansible server 
+resource "aws_eks_access_entry" "ansible_server" {
+  cluster_name      = aws_eks_cluster.this.name
+  principal_arn     = module.security.ansible_role_arn
+  type              = "EC2_LINUX"
+  
+}
+
+resource "aws_eks_access_policy_association" "ansible_edit_access" {
+  cluster_name  = aws_eks_cluster.this.name
+  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSEditPolicy"
+  principal_arn = module.security.ansible_role_arn
+   access_scope {
+    type = "CLUSTER"
+  }
 }

@@ -47,6 +47,10 @@ variable "eks_cluster_name" {
   type        = string
 }
 
+variable "eks_authentication_mode" {
+  description = "Authentication mode of the EKS cluster"
+  type        = string
+}
 variable "eks_node_group_name" {
   description = "Name of the EKS node group"
   type        = string

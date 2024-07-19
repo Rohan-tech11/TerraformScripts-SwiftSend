@@ -14,3 +14,4 @@ eks_min_size        = 1
 eks_max_size        = 3
 efs_creation_token  = "staging-jenkins-efs"
 efs_encrypted       = true
+eks_authentication_mode = "API_AND_CONFIG_MAP"

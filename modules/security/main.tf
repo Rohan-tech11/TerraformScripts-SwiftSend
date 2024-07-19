@@ -53,66 +53,7 @@ resource "aws_iam_role_policy_attachment" "ssm_policy" {
 #   role       = aws_iam_role.ansible_role.name
 # }
 
-# Added  custom policy  for eks read only access 
-resource "aws_iam_role_policy" "eks_access" {
-  name = "${var.environment}-eks-access"
-  role = aws_iam_role.ansible_role.id
 
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Action = [
-          "eks:DescribeCluster",
-          "eks:ListClusters",
-          "eks:DescribeNodegroup",
-          "eks:ListNodegroups",
-          "eks:ListUpdates",
-          "eks:AccessKubernetesApi",
-          "eks:ListFargateProfiles",
-          "eks:DescribeFargateProfile",
-          "eks:ListAddons",
-          "eks:DescribeAddon",
-          "eks:ListIdentityProviderConfigs",
-          "eks:DescribeIdentityProviderConfig"
-        ]
-        Resource = "*"
-      },
-      {
-        Effect = "Allow"
-        Action = [
-          "iam:ListRoles"
-        ]
-        Resource = "*"
-      }
-    ]
-  })
-}
-
-#  policy for EKS cluster access
-resource "aws_iam_role_policy" "eks_cluster_access" {
-  name = "${var.environment}-eks-cluster-access"
-  role = aws_iam_role.ansible_role.id
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Action = [
-          "eks:DescribeCluster",
-          "eks:ListClusters",
-          "eks:DescribeNodegroup",
-          "eks:ListNodegroups",
-          "eks:ListUpdates",
-          "eks:AccessKubernetesApi"
-        ]
-        Resource = "*"
-      }
-    ]
-  })
-}
 
 resource "aws_iam_instance_profile" "ansible_profile" {
   name = "${var.environment}-ansible-profile"
