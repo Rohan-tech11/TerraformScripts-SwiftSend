@@ -45,6 +45,8 @@ module "eks" {
   min_size         = var.eks_min_size
   max_size         = var.eks_max_size
   authentication_mode = var.eks_authentication_mode
+  ansible_role_arn = module.security.ansible_role_arn
+
 }
 
 module "efs" {

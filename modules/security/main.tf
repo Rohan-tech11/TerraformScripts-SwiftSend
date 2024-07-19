@@ -60,3 +60,5 @@ resource "aws_iam_instance_profile" "ansible_profile" {
   role = aws_iam_role.ansible_role.name
 }
 
+
+

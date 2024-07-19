@@ -76,6 +76,8 @@ variable "eks_max_size" {
   type        = number
 }
 
+
+
 # EFS Variables
 variable "efs_creation_token" {
   description = "Creation token for the EFS file system"
