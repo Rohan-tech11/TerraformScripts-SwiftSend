@@ -82,7 +82,17 @@ resource "aws_iam_policy" "terraform_s3_policy" {
           "${aws_s3_bucket.tfstate.arn}",
           "${aws_s3_bucket.tfstate.arn}/*"
         ]
-      }
+      },
+      {
+      Effect = "Allow",
+      Action = [
+        "dynamodb:GetItem",
+        "dynamodb:PutItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable"
+      ],
+      Resource = "arn:aws:dynamodb:ca-central-1:533267308718:table/staging-tfstate-lock"
+    }
     ]
   })
 }
