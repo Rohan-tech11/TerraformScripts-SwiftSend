@@ -58,3 +58,18 @@ module "efs" {
 }
 
 
+module "dynamoDB" {
+  source = "../../modules/dynamodb"
+  environment    = var.environment
+  aws_region     = var.aws_region
+}
+
+
+module "s3-backend" {
+  source = "../../modules/s3-backend"
+  environment    = var.environment
+  aws_region     = var.aws_region
+}
+
+
+

@@ -1,6 +1,3 @@
-provider "aws" {
-  region = var.aws_region
-}
 
 resource "aws_dynamodb_table" "tfstate_lock" {
   name         = "${var.environment}-tfstate-lock"
