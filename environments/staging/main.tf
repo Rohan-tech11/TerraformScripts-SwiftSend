@@ -83,4 +83,10 @@ module "rds" {
   password           = var.rds_password
 }
 
+module "s3-ansible-ssm" {
+  source = "../../modules/s3-ansible-ssm"
+  bucket_name = "ansible-ssm-bucket-${var.environment}"
+  environment = var.environment
+}
+
 
