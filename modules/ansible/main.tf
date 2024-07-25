@@ -35,6 +35,12 @@ resource "aws_instance" "ansible_server" {
               # Install eksctl
               curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
               sudo mv /tmp/eksctl /usr/local/bin
+
+               # Configure cluster connection
+              aws eks --region ca-central-1 update-kubeconfig --name staging-jenkins-cluster
+              
+              # Verify connection
+              kubectl get svc
               EOF
 
   tags = {
