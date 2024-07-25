@@ -1,6 +1,7 @@
 # Ignore Terraform state files
 *.tfstate.backup
 
+
 # Ignore .terraform directory and lock files
 **/.terraform/*
 *.tfstate.lock.info

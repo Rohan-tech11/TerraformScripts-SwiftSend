@@ -88,3 +88,19 @@ variable "efs_encrypted" {
   description = "Whether the EFS file system should be encrypted"
   type        = bool
 }
+
+//rds variables
+variable "rds_db_name" {
+  type        = string
+  description = "The name of the database to create when the RDS instance is created"
+}
+
+variable "rds_username" {
+  type        = string
+  description = "Username for the master DB user"
+}
+
+variable "rds_password" {
+  type        = string
+  description = "Password for the master DB user"
+}

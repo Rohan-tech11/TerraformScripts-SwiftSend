@@ -71,5 +71,16 @@ module "s3-backend" {
   aws_region     = var.aws_region
 }
 
+module "rds" {
+  source = "../../modules/rds"
+
+  environment        = var.environment
+  vpc_id             = module.networking.vpc_id
+  public_subnet_ids = module.networking.public_subnet_ids
+  //private_subnet_ids = module.networking.private_subnet_ids  
+  db_name            = var.rds_db_name
+  username           = var.rds_username
+  password           = var.rds_password
+}
 
 

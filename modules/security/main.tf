@@ -48,6 +48,20 @@ resource "aws_iam_role_policy_attachment" "ssm_policy" {
   role       = aws_iam_role.ansible_role.name
 }
 
+resource "aws_iam_role_policy_attachment" "eks_worker_node_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+  role       = aws_iam_role.ansible_role.name
+}
+
+
+# AWS SSM uses an S3 bucket to store the results of commands run on EC2 instances.
+# Ansible needs to read these results to know if its tasks succeeded or failed.
+# Without specifying an S3 bucket, Ansible can't get this information, so it can't work properly with SSM
+resource "aws_iam_role_policy_attachment" "ansible_s3_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+  role       = aws_iam_role.ansible_role.name
+}
+
 # resource "aws_iam_role_policy_attachment" "eks_read_only" {
 #   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSReadOnlyAccess"
 #   role       = aws_iam_role.ansible_role.name

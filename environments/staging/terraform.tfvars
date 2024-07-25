@@ -15,3 +15,6 @@ eks_max_size        = 3
 efs_creation_token  = "staging-jenkins-efs"
 efs_encrypted       = true
 eks_authentication_mode = "API_AND_CONFIG_MAP"
+rds_db_name = "swiftsend"
+rds_password = "SpringSecurity123"
+rds_username = "swiftsendadmin"
