@@ -1,0 +1,27 @@
+# group_vars/all.yml
+---
+kubectl_context_name: "arn:aws:eks:ca-central-1:533267308718:cluster/staging-jenkins-cluster"
+
+jenkins_namespace: "jenkins"
+jenkins_chart_version: "4.2.17"
+jenkins_controller_image_tag: "2.377"
+jenkins_controller_image_pull_policy: "IfNotPresent"
+
+jenkins_admin_email: "krishnanhari@outlook.com"
+jenkins_base_url: "jenkins-swiftsend.com"
+
+jenkins_req_cpu: "500m"
+jenkins_req_mem: "1Gi"
+jenkins_lim_cpu: "1"
+jenkins_lim_mem: "2Gi"
+
+ingress:
+  enabled: true
+  class_name: alb
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: "{{ jenkins_base_url }}"
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/certificate-arn: "your-certificate-arn" # Optional for HTTPS
+    alb.ingress.kubernetes.io/ssl-redirect: "443" # Optional for HTTPS
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]' # Use only HTTP if you don't have HTTPS setup

@@ -1,0 +1,15 @@
+---
+- name: Deploy Jenkins
+  hosts: ansible_controller
+  gather_facts: false
+  vars_files:
+    - ../group_vars/all.yml
+    - ../vars/main.yml
+  tasks:
+    - name: Set context for kubectl
+      command: "kubectl config use-context {{ kubectl_context_name }}"
+      changed_when: false
+
+    - name: "Deploy Jenkins"
+      include_role:
+        name: jenkins

@@ -1,0 +1,5 @@
+# Jenkins variables
+app_name: "swiftsend"
+
+# k8s variables
+kubectl_context_name: "arn:aws:eks:ca-central-1:533267308718:cluster/staging-jenkins-cluster"

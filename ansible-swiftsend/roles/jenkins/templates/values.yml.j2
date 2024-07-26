@@ -1,0 +1,33 @@
+controller:
+  serviceSelector:
+    app.kubernetes.io/name: jenkins
+    app.kubernetes.io/instance: jenkins
+    app.kubernetes.io/component: jenkins-controller
+  tag: {{ jenkins_controller_image_tag }}
+  imagePullPolicy: {{ jenkins_controller_image_pull_policy }}
+  resources:
+    requests:
+      cpu: {{ jenkins_req_cpu }}
+      memory: {{ jenkins_req_mem }}
+    limits:
+      cpu: {{ jenkins_lim_cpu }}
+      memory: {{ jenkins_lim_mem }}
+
+  jenkinsUrl: {{ jenkins_base_url }}
+  jenkinsAdminEmail: {{ jenkins_admin_email }}
+
+  ingress:
+    enabled: {{ ingress.enabled }}
+    ingressClassName: {{ ingress.class_name }}            
+    annotations: {{ ingress.annotations }}
+
+  additionalPlugins: {{ jenkins_additional_plugins }}
+  scriptApproval: {{ jenkins_approved_signatures }}
+  
+agent:
+  enabled: true
+  componentName: agent
+
+serviceAccount:
+  create: true
+  name: jenkins
