@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: jenkins
+  namespace: jenkins
+  labels:
+    app.kubernetes.io/name: jenkins
+    app.kubernetes.io/instance: jenkins
+spec:
+  serviceName: jenkins
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: jenkins
+      app.kubernetes.io/instance: jenkins
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: jenkins
+        app.kubernetes.io/instance: jenkins
+        app.kubernetes.io/component: jenkins-controller
+    spec:
+      containers:
+        - name: jenkins
+          image: jenkins/jenkins:lts
+          ports:
+            - containerPort: 8080
+              name: http
+            - containerPort: 50000
+              name: agent
+          volumeMounts:
+            - name: jenkins-home
+              mountPath: /var/jenkins_home
+      volumes:
+        - name: jenkins-home
+          persistentVolumeClaim:
+            claimName: jenkins-pvc

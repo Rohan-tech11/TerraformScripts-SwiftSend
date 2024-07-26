@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"StatefulSet","metadata":{"annotations":{},"name":"jenkins","namespace":"jenkins"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"jenkins"}},"serviceName":"jenkins","template":{"metadata":{"labels":{"app":"jenkins"}},"spec":{"containers":[{"image":"jenkins/jenkins:lts","name":"jenkins","ports":[{"containerPort":8080,"name":"http"},{"containerPort":50000,"name":"agent"}],"volumeMounts":[{"mountPath":"/var/jenkins_home","name":"jenkins-home"}]}],"volumes":[{"name":"jenkins-home","persistentVolumeClaim":{"claimName":"jenkins-pvc"}}]}}}}
+  creationTimestamp: "2024-07-23T23:29:26Z"
+  generation: 1
+  name: jenkins
+  namespace: jenkins
+  resourceVersion: "1961489"
+  uid: ac8f03cd-5280-429f-859f-400a5f09a79e
+spec:
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+    whenScaled: Retain
+  podManagementPolicy: OrderedReady
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: jenkins
+  serviceName: jenkins
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: jenkins
+    spec:
+      containers:
+      - image: jenkins/jenkins:lts
+        imagePullPolicy: IfNotPresent
+        name: jenkins
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 50000
+          name: agent
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /var/jenkins_home
+          name: jenkins-home
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: jenkins-home
+        persistentVolumeClaim:
+          claimName: jenkins-pvc
+  updateStrategy:
+    rollingUpdate:
+      partition: 0
+    type: RollingUpdate
+status:
+  availableReplicas: 1
+  collisionCount: 0
+  currentReplicas: 1
+  currentRevision: jenkins-585cfb7d5f
+  observedGeneration: 1
+  readyReplicas: 1
+  replicas: 1
+  updateRevision: jenkins-585cfb7d5f
+  updatedReplicas: 1
