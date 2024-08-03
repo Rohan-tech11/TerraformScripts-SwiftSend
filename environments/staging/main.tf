@@ -90,3 +90,11 @@ module "s3-ansible-ssm" {
 }
 
 
+module "ecr" {
+  source = "../../modules/ecr"
+
+  environment       = var.environment
+  repository_name   = "my-app-repo"
+  eks_node_role_name = module.eks.node_role_name
+}
+

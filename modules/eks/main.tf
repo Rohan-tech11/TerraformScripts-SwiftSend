@@ -33,6 +33,11 @@ resource "aws_eks_node_group" "this" {
   ]
 }
 
+
+
+
+
+
 //creating trusted entity as eks
 resource "aws_iam_role" "eks_cluster" {
   name = "${var.environment}-eks-cluster-role"
@@ -99,6 +104,8 @@ resource "aws_eks_access_entry" "ansible_server" {
 
 }
 
+
+//creating access policy for ansible role
 resource "aws_eks_access_policy_association" "ansible_edit_access" {
   cluster_name  = aws_eks_cluster.this.name
   policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSEditPolicy"
