@@ -2,6 +2,9 @@ provider "aws" {
   region = var.aws_region
 }
 
+provider "kubernetes" {
+  config_path = "~/.kube/config"
+}
 module "networking" {
   source = "../../modules/networking"
 
@@ -35,6 +38,7 @@ module "ansible" {
 
 module "eks" {
   source = "../../modules/eks"
+  aws_region = var.aws_region
   environment      = var.environment
   vpc_id           = module.networking.vpc_id
   private_subnet_ids = module.networking.private_subnet_ids
@@ -46,6 +50,8 @@ module "eks" {
   max_size         = var.eks_max_size
   authentication_mode = var.eks_authentication_mode
   ansible_role_arn = module.security.ansible_role_arn
+  ecr_access_policy_arn = module.ecr.ecr_access_policy_arn
+
 
 }
 
