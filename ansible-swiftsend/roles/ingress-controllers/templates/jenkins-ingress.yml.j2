@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jenkins-ingress
+  namespace: {{ jenkins_namespace }}
+  annotations:
+    kubernetes.io/ingress.class: {{ ingress.class_name }}
+    external-dns.alpha.kubernetes.io/hostname: "{{ jenkins_base_url }}"
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/certificate-arn: "{{ ingress.annotations.alb.ingress.kubernetes.io/certificate-arn }}" # Optional for HTTPS
+    alb.ingress.kubernetes.io/ssl-redirect: "443" # Optional for HTTPS
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]' # Use only HTTP if you don't have HTTPS setup
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: jenkins
+                port:
+                  number: 8080

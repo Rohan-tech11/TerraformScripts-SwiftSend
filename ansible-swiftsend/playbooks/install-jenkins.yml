@@ -10,6 +10,10 @@
       command: "kubectl config use-context {{ kubectl_context_name }}"
       changed_when: false
 
+    - name: "Deploy ALB and NGINX Ingress Controllers"
+      include_role:
+        name: ingress-controllers
+
     - name: "Deploy Jenkins"
       include_role:
         name: jenkins
