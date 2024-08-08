@@ -152,8 +152,53 @@ resource "aws_iam_role" "jenkins_ecr_access_role" {
   })
 }
 
+data "aws_iam_policy_document" "jenkins_eks_access_policy" {
+  statement {
+    actions = [
+      "eks:DescribeCluster",
+      "eks:DescribeNodegroup",
+      "eks:ListNodegroups",
+      "eks:CreateNodegroup",
+      "eks:UpdateNodegroupConfig",
+      "eks:UpdateNodegroupVersion",
+      "eks:DeleteNodegroup",
+      "eks:DescribeUpdate",
+      "eks:ListUpdates",
+      "eks:CreateUpdate",
+      "eks:DeleteUpdate",
+      "eks:DescribeAddonVersions",
+      "eks:ListAddons",
+      "eks:CreateAddon",
+      "eks:UpdateAddon",
+      "eks:DeleteAddon",
+      "ec2:DescribeInstances",
+      "ec2:DescribeSecurityGroups",
+      "ec2:DescribeSubnets",
+      "ec2:DescribeVpcs",
+      "iam:PassRole",
+      "kubernetes:*"
+    ]
+    effect = "Allow"
+    resources = [
+      aws_eks_cluster.this.arn,
+      aws_eks_node_group.this.arn
+    ]
+  }
+}
+
+resource "aws_iam_policy" "jenkins_eks_access_policy" {
+  name        = "${var.environment}-jenkins-eks-access-policy"
+  description = "Policy for Jenkins to interact with EKS resources"
+  policy      = data.aws_iam_policy_document.jenkins_eks_access_policy.json
+}
+
 resource "aws_iam_role_policy_attachment" "jenkins_ecr_access" {
   policy_arn = var.ecr_access_policy_arn
+  role       = aws_iam_role.jenkins_ecr_access_role.name
+}
+
+resource "aws_iam_role_policy_attachment" "jenkins_eks_access" {
+  policy_arn = aws_iam_policy.jenkins_eks_access_policy.arn
   role       = aws_iam_role.jenkins_ecr_access_role.name
 }
 
