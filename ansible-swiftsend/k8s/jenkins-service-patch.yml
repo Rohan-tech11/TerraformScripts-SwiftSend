@@ -1,5 +1,0 @@
-spec:
-  selector:
-    app.kubernetes.io/name: jenkins
-    app.kubernetes.io/instance: jenkins
-    app.kubernetes.io/component: jenkins-controller
