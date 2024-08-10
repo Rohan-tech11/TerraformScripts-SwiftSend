@@ -5,12 +5,9 @@ resource "aws_eks_cluster" "this" {
   vpc_config {
     subnet_ids = var.private_subnet_ids
   }
-    access_config {
+  access_config {
     authentication_mode = var.authentication_mode
   }
-
- 
-
 
   depends_on = [aws_iam_role_policy_attachment.eks_cluster_policy]
 }
@@ -36,12 +33,7 @@ resource "aws_eks_node_group" "this" {
   ]
 }
 
-
-
-
-
-
-//creating trusted entity as eks
+// Creating trusted entity as eks
 resource "aws_iam_role" "eks_cluster" {
   name = "${var.environment}-eks-cluster-role"
 
@@ -59,13 +51,13 @@ resource "aws_iam_role" "eks_cluster" {
   })
 }
 
-//attaching policy to the role  assummed by ekscluster
+// Attaching policy to the role assumed by eks cluster
 resource "aws_iam_role_policy_attachment" "eks_cluster_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
   role       = aws_iam_role.eks_cluster.name
 }
 
-//iam role for eks nodes(ec2)
+// IAM role for eks nodes (EC2)
 resource "aws_iam_role" "eks_nodes" {
   name = "${var.environment}-eks-node-role"
 
@@ -83,7 +75,7 @@ resource "aws_iam_role" "eks_nodes" {
   })
 }
 
-//atachment of policies to eks  worker nodes
+// Attachment of policies to eks worker nodes
 resource "aws_iam_role_policy_attachment" "eks_worker_node_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
   role       = aws_iam_role.eks_nodes.name
@@ -99,27 +91,24 @@ resource "aws_iam_role_policy_attachment" "ec2_container_registry_read_only" {
   role       = aws_iam_role.eks_nodes.name
 }
 
-//creating access entry for ansible server 
+// Creating access entry for ansible server 
 resource "aws_eks_access_entry" "ansible_server" {
-  cluster_name      = aws_eks_cluster.this.name
-  principal_arn     = var.ansible_role_arn
-  type              = "STANDARD"  
-
+  cluster_name  = aws_eks_cluster.this.name
+  principal_arn = var.ansible_role_arn
+  type          = "STANDARD"  
 }
 
-
-//creating access policy for ansible role
+// Creating access policy for ansible role
 resource "aws_eks_access_policy_association" "ansible_edit_access" {
   cluster_name  = aws_eks_cluster.this.name
   policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSEditPolicy"
   principal_arn = var.ansible_role_arn
-   access_scope {
+  access_scope {
     type = "cluster"
   }
 }
 
-
-# New resources for IRSA and Jenkins service account
+// Resources for IRSA and Jenkins service account
 data "tls_certificate" "eks" {
   url = aws_eks_cluster.this.identity[0].oidc[0].issuer
 }
@@ -152,37 +141,25 @@ resource "aws_iam_role" "jenkins_ecr_access_role" {
   })
 }
 
+// Updated IAM policy document for Jenkins EKS access
 data "aws_iam_policy_document" "jenkins_eks_access_policy" {
   statement {
     actions = [
-      "eks:DescribeCluster",
-      "eks:DescribeNodegroup",
-      "eks:ListNodegroups",
-      "eks:CreateNodegroup",
-      "eks:UpdateNodegroupConfig",
-      "eks:UpdateNodegroupVersion",
-      "eks:DeleteNodegroup",
-      "eks:DescribeUpdate",
-      "eks:ListUpdates",
-      "eks:CreateUpdate",
-      "eks:DeleteUpdate",
-      "eks:DescribeAddonVersions",
-      "eks:ListAddons",
-      "eks:CreateAddon",
-      "eks:UpdateAddon",
-      "eks:DeleteAddon",
+      "eks:*",  // Full access to all EKS actions
       "ec2:DescribeInstances",
       "ec2:DescribeSecurityGroups",
       "ec2:DescribeSubnets",
       "ec2:DescribeVpcs",
       "iam:PassRole",
-      "kubernetes:*"
     ]
-    effect = "Allow"
-    resources = [
-      aws_eks_cluster.this.arn,
-      aws_eks_node_group.this.arn
-    ]
+    effect    = "Allow"
+    resources = ["*"]  // Allow access to all resources
+  }
+  
+  statement {
+    actions   = ["sts:AssumeRole"]
+    effect    = "Allow"
+    resources = [aws_iam_role.jenkins_ecr_access_role.arn]
   }
 }
 
@@ -202,6 +179,7 @@ resource "aws_iam_role_policy_attachment" "jenkins_eks_access" {
   role       = aws_iam_role.jenkins_ecr_access_role.name
 }
 
+// Update the Kubernetes service account with additional annotations
 resource "kubernetes_service_account" "jenkins_sa" {
   metadata {
     name      = "jenkins-sa"
@@ -209,5 +187,37 @@ resource "kubernetes_service_account" "jenkins_sa" {
     annotations = {
       "eks.amazonaws.com/role-arn" = aws_iam_role.jenkins_ecr_access_role.arn
     }
+  }
+}
+
+// Create a Kubernetes cluster role for full access
+resource "kubernetes_cluster_role" "jenkins_admin_role" {
+  metadata {
+    name = "jenkins-admin-role"
+  }
+
+  rule {
+    api_groups = ["*"]
+    resources  = ["*"]
+    verbs      = ["*"]
+  }
+}
+
+// Bind the cluster role to the Jenkins service account
+resource "kubernetes_cluster_role_binding" "jenkins_admin_binding" {
+  metadata {
+    name = "jenkins-admin-binding"
+  }
+
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "ClusterRole"
+    name      = kubernetes_cluster_role.jenkins_admin_role.metadata[0].name
+  }
+
+  subject {
+    kind      = "ServiceAccount"
+    name      = kubernetes_service_account.jenkins_sa.metadata[0].name
+    namespace = kubernetes_service_account.jenkins_sa.metadata[0].namespace
   }
 }
