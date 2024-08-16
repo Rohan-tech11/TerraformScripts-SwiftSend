@@ -1,3 +1,23 @@
+# Ansible Server Module
+# ----------------------
+# **Author:** Rohan
+#
+# This module provisions an EC2 instance as an Ansible server, preconfigured with essential tools (`Ansible`, `kubectl`, `AWS CLI v2`, `eksctl`).
+#
+# **Key Points:**
+# - **AMI:** Uses the latest Amazon Linux 2.
+# - **Instance Type & Key:** Configurable via `instance_type` and `key_name` variables.
+# - **Subnet & Security:** Deployed in a private subnet with a security group.
+# - **IAM Role:** Attached for AWS API access.
+# - **User Data:** Installs necessary tools and connects to the EKS cluster (`staging-jenkins-cluster` in `ca-central-1`).
+# - **Tags:** Includes environment-specific tags for easy identification.
+#
+# **Before using:**
+# - Set `key_name`, `instance_type`, `private_subnet_id`, `ansible_sg_id`, and `iam_instance_profile_name`.
+# - Note: Instance is in a private subnet; ensure connectivity.
+
+
+
 data "aws_ami" "amazon_linux_2" {
   most_recent = true
   owners      = ["amazon"]
