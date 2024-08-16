@@ -1,3 +1,19 @@
+# Main Terraform Configuration
+# ----------------------------
+# Author: Rohan
+#
+# This is the main Terraform configuration file that orchestrates the entire infrastructure.
+# It includes modules for networking, security, EKS, EFS, DynamoDB, S3, RDS, and ECR.
+#
+# Before using:
+# 1. Ensure all referenced modules exist in the '../../modules/' directory
+# 2. Review and set appropriate values for all variables in a separate variables file
+# 3. Make sure you have the necessary AWS permissions to create these resources
+# 4. Be aware that this configuration may create resources that incur AWS charges
+#
+# Note: Some modules may require additional setup or dependencies. 
+
+
 terraform {
   required_providers {
     aws = {
