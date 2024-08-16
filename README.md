@@ -82,6 +82,8 @@ This repository contains Terraform scripts developed as part of a capstone proje
 
 ## Architecture Diagram
 
+![SwiftSend AWS Architecture](media/Swifftend-AWS-Architecture.jpg)
+
 ## Contributing
 
 Contributions to improve the scripts or documentation are welcome. Please follow the standard fork-and-pull request workflow.
