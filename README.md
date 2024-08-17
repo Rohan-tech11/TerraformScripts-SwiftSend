@@ -90,6 +90,6 @@ Contributions to improve the scripts or documentation are welcome. Please follow
 
 ## Acknowledgments
 
-Special thanks to Professor Ozzie Shahmadar for guidance throughout this capstone project.
+Special thanks to Professor Ozzie Shahmadar and Professor Krupal Patel for guidance throughout this capstone project.
 
 For any questions or support, please open an issue in this repository.
