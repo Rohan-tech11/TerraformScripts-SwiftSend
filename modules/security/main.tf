@@ -53,6 +53,7 @@ resource "aws_iam_role_policy_attachment" "eks_worker_node_policy" {
   role       = aws_iam_role.ansible_role.name
 }
 
+//add eks cluster policy and eks service policy to sync with infra
 
 # AWS SSM uses an S3 bucket to store the results of commands run on EC2 instances.
 # Ansible needs to read these results to know if its tasks succeeded or failed.
