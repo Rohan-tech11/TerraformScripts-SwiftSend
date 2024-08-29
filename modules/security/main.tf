@@ -43,17 +43,42 @@ resource "aws_iam_role" "ansible_role" {
   })
 }
 
+
+# Create the IAM policy for  ansible to interact with cluster
+resource "aws_iam_policy" "eks_ansible_policy" {
+  name        = "${var.environment}-eks-ansible-policy"
+  path        = "/"
+  description = "IAM policy for Ansible to manage EKS clusters"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "eks:DescribeCluster",
+          "eks:ListClusters"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+# Attach the policy to the ansible role
+resource "aws_iam_role_policy_attachment" "eks_ansible_policy_attachment" {
+  policy_arn = aws_iam_policy.eks_ansible_policy.arn
+  role       = aws_iam_role.ansible_role.name
+}
+
+
 resource "aws_iam_role_policy_attachment" "ssm_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
   role       = aws_iam_role.ansible_role.name
 }
 
-resource "aws_iam_role_policy_attachment" "eks_worker_node_policy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-  role       = aws_iam_role.ansible_role.name
-}
 
-//add eks cluster policy and eks service policy to sync with infra
+
 
 # AWS SSM uses an S3 bucket to store the results of commands run on EC2 instances.
 # Ansible needs to read these results to know if its tasks succeeded or failed.
