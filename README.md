@@ -2,9 +2,8 @@
 
 Author: Rohan
 
-## Capstone Project Overview
+This repository showcases my exploration into infrastructure automation using Terraform, demonstrating the implementation of a robust and scalable cloud infrastructure. The project reflects modern DevOps practices and cloud-native architectural patterns.
 
-This repository contains Terraform scripts developed as part of a capstone project to provision and manage a robust, scalable cloud infrastructure for deploying the SwiftSend cloud-native application. The infrastructure is designed with security, scalability, and best practices in mind.
 
 ## Key Components
 
